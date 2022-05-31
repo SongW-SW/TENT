@@ -1,7 +1,7 @@
 # TENT
 
 
-This is the code for KDD2022 submission Task-Adaptive Few-shot Node Classification.
+This is the code for KDD2022 paper Task-Adaptive Few-shot Node Classification.
 
 To run the code:
 
