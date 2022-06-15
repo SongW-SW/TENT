@@ -738,12 +738,9 @@ for repeat in range(1):
     #for dataset in ['dblp','Amazon_clothing','Amazon_eletronics']:
     for dataset in names:
 
-
-        #dataset = args.dataset
         adj_sparse, features, labels, degrees, class_list_train, class_list_valid, class_list_test, id_by_class = load_data(dataset)
 
 
-        #features/=features.max(0,keepdim=True)[0]
 
         adj=adj_sparse.to_dense()
 
@@ -757,7 +754,6 @@ for repeat in range(1):
 
         encoder.load_state_dict(torch.load('./saved_models/GIN_{}_{}_epochs_class_ego_contrast_GCN.pth'.format(dataset,pretrain_epochs)))
 
-        # encoder.load_state_dict(torch.load('/home/yzj/Desktop/DL_LZJ/pytorch/GCN_Test/models/GCN.pth'))
 
         task_model=GCN_dense(nfeat=args.hidden1,
                     nhid=args.hidden2,
@@ -798,7 +794,6 @@ for repeat in range(1):
                             print("Meta-Train_Accuracy: {}".format(np.array(meta_train_acc).mean(axis=0)))
 
 
-                #valid_pool = [task_generator(id_by_class, class_list_valid, n_way, k_shot, n_query) for i in range(meta_valid_num)]
                 test_pool = [task_generator(id_by_class, class_list_test, n_way, k_shot, m_query=20) for i in range(meta_test_num)]
 
 
