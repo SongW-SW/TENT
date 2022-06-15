@@ -147,11 +147,6 @@ def load_data_pretrain(dataset_source):
         features=torch.FloatTensor(graph['node_feat'])
         labels=torch.LongTensor(labels).squeeze()
         
-        #class_list_test = random.sample(list(range(40)),20)
-        #train_class=list(set(list(range(40))).difference(set(class_list_test)))
-        #class_list_valid = random.sample(train_class, 5)
-        #class_list_train = list(set(train_class).difference(set(class_list_valid)))
-        #json.dump([class_list_train,class_list_valid,class_list_test],open('./few_shot_data/{}_class_split.json'.format(dataset_source),'w'))
         class_list_train,class_list_valid,class_list_test=json.load(open('./few_shot_data/{}_class_split.json'.format(dataset_source)))
 
         idx_train,idx_valid,idx_test=[],[],[]
@@ -251,18 +246,7 @@ def load_data_pretrain(dataset_source):
         features = torch.FloatTensor(features)
         labels=torch.LongTensor(labels).squeeze()
         
-        
-        
-        
-        
-        #features=features.todense()
-        
-        
-        #class_list_test = random.sample(list(range(70)),25)
-        #train_class=list(set(list(range(70))).difference(set(class_list_test)))
-        #class_list_valid = random.sample(train_class, 20)
-        #class_list_train = list(set(train_class).difference(set(class_list_valid)))
-        #json.dump([class_list_train,class_list_valid,class_list_test],open('./few_shot_data/{}_class_split.json'.format(dataset_source),'w'))
+ 
         
         class_list_train,class_list_valid,class_list_test=json.load(open('./few_shot_data/{}_class_split.json'.format(dataset_source)))
 
