@@ -23,7 +23,38 @@ from torch.nn.parameter import Parameter
 from torch.nn.modules.module import Module
 
         
-        
+ 
+class GraphConvolution_dense(nn.Module):
+    def __init__(self, in_features, out_features, bias=True):
+            super(GraphConvolution_dense, self).__init__()
+            self.in_features = in_features
+            self.out_features = out_features
+            self.weight = Parameter(torch.FloatTensor(in_features, out_features))
+            if bias:
+                self.bias = Parameter(torch.FloatTensor(out_features))
+            else:
+                self.register_parameter('bias', None)
+            self.reset_parameters()
+
+    def reset_parameters(self):
+        stdv = 1. / math.sqrt(self.weight.size(1))
+        self.weight.data.uniform_(-stdv, stdv)
+        if self.bias is not None:
+            self.bias.data.uniform_(-stdv, stdv)
+
+    def forward(self, input, adj, w, b):
+
+        support = torch.mm(input, self.weight if w==None else w)
+        output = torch.mm(adj, support)
+
+        if self.bias is not None:
+            if b==None:
+                return output + self.bias
+            else:
+                return output + b
+        else:
+            return output
+       
         
 class GCN_dense(nn.Module):
     def __init__(self, nfeat, nhid, nclass, dropout):
