@@ -17,7 +17,7 @@ Then run the command:
 
 `python train_TENT.py`
 
-The datasets and parameters can be tuned in the same file.
+The datasets and parameters can be tuned in the same file. And the results will be recorded as a json file in the same directory.
 
 
 
