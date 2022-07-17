@@ -9,6 +9,7 @@ First, unzip the dataset file by running the command:
 
 `unzip dataset.zip`
 
+Due to the large size of ogbn-arxiv, it will be automatically downloaded when you run the code for the first time.
 Then run the command:
 
 `python train_TENT.py`
