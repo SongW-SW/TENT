@@ -26,27 +26,21 @@ from torch.nn.modules.module import Module
 class GraphConvolution(nn.Module):
     """
     Simple GCN layer, similar to https://arxiv.org/abs/1609.02907
-
-    GraphConvolution作为一个类，首先需要定义其相关属性。
-    本文中主要定义了其输入特征in_feature、输出特征out_feature两个输入，
-    以及权重weight和偏移向量bias两个参数，同时调用了其参数初始化的方法
     """
 
-    def __init__(self, in_features, out_features, bias=True):#参数属性定义
+    def __init__(self, in_features, out_features, bias=True):
         super(GraphConvolution, self).__init__()
         self.in_features = in_features
         self.out_features = out_features
         self.weight = Parameter(torch.FloatTensor(in_features, out_features))
-        # 由于weight是可以训练的，因此使用parameter定义
-        # 由于bias是可以训练的，因此使用parameter定义
+
         if bias:
             self.bias = Parameter(torch.FloatTensor(out_features))
         else:
             self.register_parameter('bias', None)
         self.reset_parameters()
 
-    def reset_parameters(self):#参数初始化
-        #为了让每次训练产生的初始参数尽可能的相同，从而便于实验结果的复现，可以设置固定的随机数生成种子。
+    def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weight.size(1))
         # size()函数主要是用来统计矩阵元素个数，或矩阵某一维上的元素个数的函数  size（1）为行
         self.weight.data.uniform_(-stdv, stdv)
