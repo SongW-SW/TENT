@@ -375,7 +375,7 @@ parser.add_argument('--test_epochs', type=int, default=2000,
                     help='Number of epochs to train.')
 parser.add_argument('--pretrain_lr', type=float, default=0.05,
                     help='Initial learning rate.')
-# 权重衰减
+
 parser.add_argument('--weight_decay', type=float, default=5e-4,  # 5e-4
                     help='Weight decay (L2 loss on parameters).')
 parser.add_argument('--hidden1', type=int, default=16,
@@ -397,12 +397,11 @@ if args.use_cuda:
     torch.cuda.manual_seed(args.seed)
 
 loss_f = nn.CrossEntropyLoss()
-# Load data
+
 
 Q=10
-N = 5
-K = 3
-avail_train_num_per_class = 0
+
+
 
 fine_tune_steps = 20
 fine_tune_lr = 0.1
