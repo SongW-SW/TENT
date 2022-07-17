@@ -366,14 +366,12 @@ def InforNCE_Loss(anchor, sample, tau, all_negative=False, temperature_matrix=No
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--use_cuda', action='store_true', default=True, help='Disables CUDA training.')
-parser.add_argument('--fastmode', action='store_true', default=False,
-                    help='Validate during training pass.')
 parser.add_argument('--seed', type=int, default=1234, help='Random seed.')
 parser.add_argument('--epochs', type=int, default=2000,
                     help='Number of epochs to train.')
-parser.add_argument('--test_epochs', type=int, default=2000,
+parser.add_argument('--test_epochs', type=int, default=100,
                     help='Number of epochs to train.')
-parser.add_argument('--pretrain_lr', type=float, default=0.05,
+parser.add_argument('--lr', type=float, default=0.05,
                     help='Initial learning rate.')
 
 parser.add_argument('--weight_decay', type=float, default=5e-4,  # 5e-4
@@ -382,10 +380,9 @@ parser.add_argument('--hidden1', type=int, default=16,
                     help='Number of hidden units.')
 parser.add_argument('--hidden2', type=int, default=16,
                     help='Number of hidden units.')
-parser.add_argument('--pretrain_dropout', type=float, default=0.2,
+parser.add_argument('--dropout', type=float, default=0.2,
                     help='Dropout rate (1 - keep probability).')
-parser.add_argument('--dataset', default='dblp',
-                    help='Dataset:Amazon_clothing/Amazon_eletronics/dblp')
+
 
 args = parser.parse_args(args=[])
 
@@ -402,12 +399,9 @@ loss_f = nn.CrossEntropyLoss()
 Q=10
 
 
-
 fine_tune_steps = 20
 fine_tune_lr = 0.1
 
-args.epochs = 2000
-args.test_epochs = 100
 
 results=defaultdict(dict)
 
@@ -416,8 +410,6 @@ for dataset in ['cora-full','Amazon_eletronics','dblp','ogbn-arxiv']:
 
     adj_sparse, features, labels, idx_train, idx_val, idx_test, n1s, n2s, class_train_dict, class_test_dict, class_valid_dict = load_data_pretrain(
         dataset)
-
-
 
 
     adj = adj_sparse.to_dense()
@@ -442,18 +434,18 @@ for dataset in ['cora-full','Amazon_eletronics','dblp','ogbn-arxiv']:
                 model = GCN_dense(nfeat=args.hidden1,
                                   nhid=args.hidden2,
                                   nclass=labels.max().item() + 1,
-                                  dropout=args.pretrain_dropout)
+                                  dropout=args.dropout)
 
                 GCN_model=GCN_emb(nfeat=features.shape[1],
                             nhid=args.hidden1,
                             nclass=labels.max().item() + 1,
-                            dropout=args.pretrain_dropout)
+                            dropout=args.dropout)
 
 
                 classifier = Linear(args.hidden1, labels.max().item() + 1)
 
                 optimizer = optim.Adam([{'params': model.parameters()}, {'params': classifier.parameters()},{'params': GCN_model.parameters()}],
-                                       lr=args.pretrain_lr, weight_decay=args.weight_decay)
+                                       lr=args.lr, weight_decay=args.weight_decay)
 
 
 
@@ -564,7 +556,6 @@ for dataset in ['cora-full','Amazon_eletronics','dblp','ogbn-arxiv']:
 
                     parameters=model.generater(class_generate_emb)
 
-                    #parameters=torch.zeros(parameters.shape,dtype=torch.float).cuda()
 
                     gc1_parameters=parameters[:(args.hidden1+1)*args.hidden2*2]
                     gc2_parameters=parameters[(args.hidden1+1)*args.hidden2*2:]
