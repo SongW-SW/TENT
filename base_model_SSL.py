@@ -24,10 +24,6 @@ from torch.nn.modules.module import Module
 
 
 class GraphConvolution(nn.Module):
-    """
-    Simple GCN layer, similar to https://arxiv.org/abs/1609.02907
-    """
-
     def __init__(self, in_features, out_features, bias=True):
         super(GraphConvolution, self).__init__()
         self.in_features = in_features
@@ -41,19 +37,16 @@ class GraphConvolution(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
+
         stdv = 1. / math.sqrt(self.weight.size(1))
-        # size()函数主要是用来统计矩阵元素个数，或矩阵某一维上的元素个数的函数  size（1）为行
+
         self.weight.data.uniform_(-stdv, stdv)
-        # uniform() 方法将随机生成下一个实数，它在 [x, y] 范围内
+
         if self.bias is not None:
             self.bias.data.uniform_(-stdv, stdv)
 
-    def forward(self, input, adj):#正向传播
-        #此处主要定义的是本层的前向传播，通常采用的是A∗X∗W的计算方法。
-        #由于A是一个sparse变量，因此其与X进行卷积的结果也是稀疏矩阵
+    def forward(self, input, adj):
 
-        # torch.mm(a, b)是矩阵a和b矩阵相乘，torch.mul(a, b)是矩阵a和b对应位相乘，a和b的维度必须相等
-        # torch.spmm(a,b)是稀疏矩阵相乘
         support = torch.mm(input, self.weight)
         output = torch.spmm(adj, support)
         if self.bias is not None:
@@ -61,10 +54,8 @@ class GraphConvolution(nn.Module):
         else:
             return output
 
-    def __repr__(self):#字符串表达
-        #__repr__()方法是类的实例化对象用来做“自我介绍”的方法，
-        #默认情况下，它会返回当前对象的“类名+object at+内存地址”，
-        #而如果对该方法进行重写，可以为其制作自定义的自我描述信息。
+    def __repr__(self):
+
         return self.__class__.__name__ + ' (' \
                + str(self.in_features) + ' -> ' \
                + str(self.out_features) + ')'
@@ -72,25 +63,24 @@ class GraphConvolution(nn.Module):
 
 
 class GraphConvolution_dense(nn.Module):
-    def __init__(self, in_features, out_features, bias=True):#参数属性定义
+    def __init__(self, in_features, out_features, bias=True):
             super(GraphConvolution_dense, self).__init__()
             self.in_features = in_features
             self.out_features = out_features
             self.weight = Parameter(torch.FloatTensor(in_features, out_features))
-            # 由于weight是可以训练的，因此使用parameter定义
-            # 由于bias是可以训练的，因此使用parameter定义
+
             if bias:
                 self.bias = Parameter(torch.FloatTensor(out_features))
             else:
                 self.register_parameter('bias', None)
             self.reset_parameters()
 
-    def reset_parameters(self):#参数初始化
-        #为了让每次训练产生的初始参数尽可能的相同，从而便于实验结果的复现，可以设置固定的随机数生成种子。
+    def reset_parameters(self):
+
         stdv = 1. / math.sqrt(self.weight.size(1))
-        # size()函数主要是用来统计矩阵元素个数，或矩阵某一维上的元素个数的函数  size（1）为行
+
         self.weight.data.uniform_(-stdv, stdv)
-        # uniform() 方法将随机生成下一个实数，它在 [x, y] 范围内
+
         if self.bias is not None:
             self.bias.data.uniform_(-stdv, stdv)
 
@@ -158,18 +148,18 @@ class Linear(nn.Module):
         self.in_features = in_features
         self.out_features = out_features
         self.weight = Parameter(torch.FloatTensor(in_features, out_features))
-        # 由于weight是可以训练的，因此使用parameter定义
+
 
         self.bias = Parameter(torch.FloatTensor(out_features))
 
         self.reset_parameters()
 
-    def reset_parameters(self):#参数初始化
-        #为了让每次训练产生的初始参数尽可能的相同，从而便于实验结果的复现，可以设置固定的随机数生成种子。
+    def reset_parameters(self):
+
         stdv = 1. / math.sqrt(self.weight.size(1))
-        # size()函数主要是用来统计矩阵元素个数，或矩阵某一维上的元素个数的函数  size（1）为行
+
         self.weight.data.uniform_(-stdv, stdv)
-        # uniform() 方法将随机生成下一个实数，它在 [x, y] 范围内
+
         if self.bias is not None:
             self.bias.data.uniform_(-stdv, stdv)
 
