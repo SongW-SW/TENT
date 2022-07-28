@@ -523,7 +523,7 @@ for dataset in ['cora-full','Amazon_eletronics','dblp','ogbn-arxiv']:
 
                             pos_class_graph_adj[1:,1:]=pos_graph_adj
 
-                            pos_graph_feat=torch.cat([emb_features[pos_node_idx].mean(0,keepdim=True),emb_features[pos_graph_neighbors]],0)
+                            pos_graph_feat=torch.cat([emb_features[class_pos_idx].mean(0,keepdim=True),emb_features[pos_graph_neighbors]],0)
 
 
                         if dataset!='ogbn-arxiv':
