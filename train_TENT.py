@@ -582,7 +582,6 @@ for dataset in ['cora-full','Amazon_eletronics','dblp','ogbn-arxiv']:
 
 
 
-                    loss_contrast=0
                     target_embs=target_embs.reshape([N,Q,-1]).transpose(0,1)
                     
                     support_features = emb_features[pos_node_idx].reshape([N,K,-1])
@@ -596,13 +595,11 @@ for dataset in ['cora-full','Amazon_eletronics','dblp','ogbn-arxiv']:
                     similarities=[]
                     for j in range(Q):
                         class_contras_loss, similarity=InforNCE_Loss(target_embs[j],class_ego_embs/taus.unsqueeze(-1),tau=0.5)
-
-                        loss_contrast+=class_contras_loss/Q
                         similarities.append(similarity)
 
                     loss_supervised=loss_f(classifier(emb_features[idx_train]), labels[idx_train])
 
-                    loss=loss_supervised+loss_contrast*0.
+                    loss=loss_supervised
 
 
                     labels_train=labels[target_idx]
