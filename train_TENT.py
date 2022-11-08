@@ -42,7 +42,7 @@ from base_model_SSL import GCN_emb
 # from base_model import GCN
 def l2_normalize(x):
     norm = x.pow(2).sum(1, keepdim=True).pow(1. / 2)
-    out = x.div(norm)
+    out = x.div(norm+1e-10)
     return out
 
 def normalize(mx):
